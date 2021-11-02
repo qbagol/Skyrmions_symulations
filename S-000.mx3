@@ -24,6 +24,7 @@ for i:=0; i<11; i++{
  for j:=0; j<8; j++{
  Func1:=5.16*Sqrt(1-(i*0.2));
  Func2:=5.16*Sqrt((i*0.2)-1);
+ 
   if i<=5 {
    if j>Func1 {
     m = RandomMagSeed(1);
