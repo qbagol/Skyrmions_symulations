@@ -1,0 +1,69 @@
+//mumax 3.10 [linux_amd64 go1.14(gc) CUDA-11.0]
+//GPU info: GeForce GT 720(2000MB), CUDA Driver 11.0, cc=3.5, using cc=35 PTX
+//(c) Arne Vansteenkiste, Dynamat LAB, Ghent University, Belgium
+//This is free software without any warranty. See license.txt
+//********************************************************************//
+//  If you use mumax in any work or publication,                      //
+//  we kindly ask you to cite the references in references.bib        //
+//********************************************************************//
+//output directory: mumax-2020-11-17_18h10.out/
+
+setmesh(512, 512, 1, 2e-9, 2e-9, 2e-9, 3, 3, 0);
+setgeom(universe());
+
+Aex   = 1.3e-11;
+alpha = 0.2;
+anisU = vector(0, 0, 1);
+Lambda = 1;
+Msat= 1420000;
+x:=0
+tableaddvar(x,"Q","1")
+tableadd(Dind)
+
+for i:=0; i<11; i++{
+ for j:=0; j<8; j++{
+ Func1:=5.16*Sqrt(1-(i*0.2));
+ Func2:=5.16*Sqrt((i*0.2)-1);
+  if i<=5 {
+   if j>Func1 {
+    m = RandomMagSeed(1);
+    Ku1=i*0.2*0.5*12.56637*1e-7*1420000*1420000;
+    Dind=j*0.001;
+
+     for k:=0; k<42; k++{
+      mag_x:=k*0.05;
+      B_ext = vector(0,0,mag_x)
+      x:=i*0.2;
+      y:=j;
+      print(i," ",j," ",k)
+      relax();ř
+      tablesave();
+      SnapshotFormat = "png";
+      SaveAs(m,sprintf("Q%.2f_D%02dmJ_B_ext%.2fT.ovf",x,y,mag_x));
+      SnapshotAs(m,sprintf("Q%.2f_D%02dmJ_B_ext%.2fT.png",x,y,mag_x));
+     }   
+    }
+   }  
+   
+  if i>5 {
+   if j>Func2 {
+    m = RandomMagSeed(1);
+    Ku1=i*0.2*0.5*12.56637*1e-7*1420000*1420000;
+    Dind=j*0.001;
+
+    for k:=0; k<42; k++{
+     mag_x:=k*0.05;
+     B_ext = vector(0,0,mag_x)
+     x:=i*0.2;
+     y:=j;
+
+     relax();
+     tablesave();
+     SnapshotFormat = "png";
+     SaveAs(m,sprintf("Q%.2f_D%02dmJ_B_ext%.2fT.ovf",x,y,mag_x));
+     SnapshotAs(m,sprintf(">Q%.2f_D%02dmJ_B_ext%.2fT.png",x,y,mag_x));
+    }   
+   }
+  }
+ }
+}   
